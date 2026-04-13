@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>[Page Title] — [Institute Name]</title>
+<title>Indian Institute of Space Science and Technology</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Outfit:wght@200;300;400;500&display=swap" rel="stylesheet">
 
@@ -655,11 +655,7 @@
     text-decoration: none;
     transition: color 0.3s;
   }
-  .closing-nav::after {
-    content: '→';
-    font-size: 1rem;
-    transition: transform 0.3s;
-  }
+  
   .closing-nav:hover { color: var(--gold); }
   .closing-nav:hover::after { transform: translateX(4px); }
 
@@ -714,7 +710,7 @@
      • .nav-back links back to your main landing page
 ════════════════════════════════════════ -->
 <nav id="nav">
-  <a href="index.html" class="nav-logo">[Institute Name]</a>
+  <a href="index.html" class="nav-logo">Indian Institute of Space Science and Technology</a>
   <ul class="nav-links">
     <li><a href="index.html#spark">The Spark</a></li>
     <li><a href="index.html#timeline">Timeline</a></li>
@@ -722,7 +718,7 @@
     <li><a href="index.html#story-blog">The Story</a></li>
     <li><a href="index.html#conclusion">Today</a></li>
   </ul>
-  <a href="Final_website.html" class="nav-back">← Back to Home</a>
+  <a href="index.html" class="nav-back">← Back to Home</a>
 </nav>
 
 
@@ -730,7 +726,7 @@
      A. PAGE HERO
      ─────────────────────────────────────
      EDITABLE:
-       1. Replace [Chapter Tag] with e.g. "Chapter II", "Milestone", "Reflection"
+       1. Replace Chapter I with e.g. "Chapter II", "Milestone", "Reflection"
        2. Replace hero title text (use <em> for the italic gold word)
        3. Replace hero subtitle text
        4. Add your background image in the CSS #page-hero rule
@@ -745,7 +741,7 @@
 
   <div class="hero-content">
     <!-- Chapter / type label -->
-    <span class="hero-tag">[Chapter Tag]</span>
+    <span class="hero-tag">Chapter III</span>
 
     <!-- Main title — use <em> for the italic/gold word -->
     <h1 class="hero-title">
@@ -870,98 +866,6 @@
 </section>
 
 
-<!-- ── TYPE 2: Text Left / Image Right ──
-     EDITABLE: heading, paragraphs, image
-     DESIGN NOTES:
-       • Mirror of Type 1 — text left, image right
-       • Creates visual rhythm when alternated with Type 1
-       • Can repeat: yes
--->
-<section class="content-block">
-  <div class="container-wide">
-    <div class="block-split block-img-right">
-
-      <!-- TEXT SIDE (renders left because of flex order) -->
-      <div class="block-text reveal">
-        <span class="section-label">[Section Tag]</span>
-
-        <h2 class="block-heading">
-          Another Section<br><em>Heading Here</em>
-        </h2>
-
-        <div class="gold-rule"></div>
-
-        <p>
-          Another content paragraph. Each Type 1 / Type 2 block pair tells one
-          part of the story. Think of them as facing pages in a book — image and
-          text always in conversation with each other.
-        </p>
-
-        <p>
-          Optional second paragraph. Delete if not needed.
-          Less text + more whitespace = more impact.
-        </p>
-      </div>
-
-      <!-- IMAGE SIDE (renders right) -->
-      <div class="block-image reveal reveal-delay-2">
-        <!-- Replace with: <img src="your-image.jpg" alt="Description" class="block-img-real"> -->
-        <div class="block-img-placeholder">
-          <div class="img-placeholder-icon">⬡</div>
-          <p class="img-placeholder-text">
-            Insert image here<br>
-            Replace with &lt;img src="..."&gt;
-          </p>
-        </div>
-      </div>
-
-    </div>
-  </div>
-</section>
-
-
-<!-- ── TYPE 3: Full-Width Image + Overlay Text ──
-     EDITABLE: heading, body text, background image (in CSS or inline style)
-     DESIGN NOTES:
-       • Dramatic full-bleed section — text floats over the image
-       • Add your image in the style attribute below (background-image: url(...))
-       • Use for: turning points, dramatic revelations, key moments
-       • Can repeat: yes, but use sparingly — 1–2 per page for maximum impact
--->
-<section class="content-block block-full"
-  style="
-    /* ADD YOUR IMAGE HERE:
-       background-image:
-         linear-gradient(to right, rgba(19,18,16,0.92) 40%, rgba(19,18,16,0.5) 100%),
-         url('your-image.jpg');
-       background-size: cover;
-       background-position: center;
-    */
-  ">
-  <div class="block-full-grid"></div>
-
-  <div class="container-wide" style="position:relative;z-index:2;width:100%">
-    <div class="block-full-content reveal">
-
-      <span class="section-label" style="color:var(--gold)">[Section Tag]</span>
-
-      <!-- Full-width block heading -->
-      <h2 class="block-full-heading">
-        A Powerful Heading<br><em>That Stands Alone</em>
-      </h2>
-
-      <!-- Full-width block text — italic, shorter, atmospheric -->
-      <p class="block-full-text">
-        This is your full-width text block. It should be shorter and more
-        atmospheric than the split blocks — a moment of reflection, not a full
-        explanation. Think caption, not paragraph. Two to four sentences maximum.
-      </p>
-
-    </div>
-  </div>
-</section>
-
-
 <!-- ────────────────────────────────────────
      REPEAT CONTENT BLOCKS AS NEEDED ABOVE.
      Copy any of the three block types and
@@ -1050,52 +954,6 @@
        • Can repeat: no — use once if at all
        • Recommended: 3–5 milestones max
 ════════════════════════════════════════ -->
-<section id="mini-timeline">
-  <div class="container">
-
-    <span class="section-label reveal">Key Moments</span>
-    <h2 class="mini-timeline-heading reveal reveal-delay-1">
-      The Shape of This Chapter
-    </h2>
-
-    <div class="mini-track">
-
-      <!-- MILESTONE 1 — EDITABLE -->
-      <div class="mini-item reveal">
-        <div class="mini-marker">[Year or Phase]</div>
-        <h3 class="mini-title">Milestone Title</h3>
-        <p class="mini-desc">
-          A brief description of this milestone — 1–2 sentences.
-          What happened, why it mattered, what changed because of it.
-        </p>
-      </div>
-
-      <!-- MILESTONE 2 — EDITABLE -->
-      <div class="mini-item reveal reveal-delay-1">
-        <div class="mini-marker">[Year or Phase]</div>
-        <h3 class="mini-title">Milestone Title</h3>
-        <p class="mini-desc">
-          A brief description of this milestone — 1–2 sentences.
-          What happened, why it mattered, what changed because of it.
-        </p>
-      </div>
-
-      <!-- MILESTONE 3 — EDITABLE -->
-      <div class="mini-item reveal reveal-delay-2">
-        <div class="mini-marker">[Year or Phase]</div>
-        <h3 class="mini-title">Milestone Title</h3>
-        <p class="mini-desc">
-          A brief description of this milestone — 1–2 sentences.
-          What happened, why it mattered, what changed because of it.
-        </p>
-      </div>
-
-      <!-- ADD MORE: copy a .mini-item block and paste it here -->
-
-    </div>
-  </div>
-</section>
-
 
 <!-- ════════════════════════════════════════
      G. CLOSING SECTION
@@ -1111,37 +969,9 @@
        • .closing-nav links reader to the next chapter/page
        • Can repeat: no — one per page, always the last section before footer
 ════════════════════════════════════════ -->
-<section id="closing">
-  <div class="container">
-    <div class="closing-inner">
 
-      <span class="section-label reveal">In Closing</span>
-
-      <!-- Closing paragraph 1 -->
-      <p class="closing-text reveal reveal-delay-1">
-        This is where you bring the page to a close — reflect on what
-        has been shared in this chapter, and give the reader a moment to
-        breathe before moving forward. Keep it warm, personal, and brief.
-        Two paragraphs is usually enough.
-      </p>
-
-      <!-- Closing paragraph 2 (optional) -->
-      <p class="closing-text reveal reveal-delay-2">
-        A second closing thought. This can acknowledge what was difficult,
-        or what was discovered, or simply thank the reader for their attention.
-        End on something quiet and human.
-      </p>
-
-      <!-- Forward-looking statement — transitions to the next page -->
-      <!-- Use <em> to emphasise the connective word (gold, non-italic) -->
-      <p class="closing-forward reveal reveal-delay-3">
-        "The next chapter begins where this one ends —
-        not with a conclusion, but with a <em>question.</em>"
-      </p>
-
-      <!-- Optional: link to next page / chapter -->
-      <a href="next-chapter.html" class="closing-nav reveal reveal-delay-4">
-        Continue to the next chapter
+      <a href="chapter4.html" class="closing-nav reveal reveal-delay-4">
+       <span class="hero-tag">Continue to the next chapter</span>
       </a>
 
     </div>
@@ -1154,9 +984,9 @@
      EDITABLE: institute name, website/contact
 ════════════════════════════════════════ -->
 <footer>
-  <span class="footer-logo">[Institute Name]</span>
+  <span class="footer-logo">Indian Institute of Space Science and Technology</span>
   <span class="footer-note">
-    [Website / Contact] &nbsp;·&nbsp; Est. [Year]
+     Est. 2007
   </span>
 </footer>
 
