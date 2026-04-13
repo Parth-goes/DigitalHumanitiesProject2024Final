@@ -1,0 +1,1189 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>[Page Title] — [Institute Name]</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Outfit:wght@200;300;400;500&display=swap" rel="stylesheet">
+
+<style>
+  /* ─── DESIGN TOKENS (identical to landing page) ─── */
+  :root {
+    --ink:        #0e0d0b;
+    --parchment:  #f5f0e8;
+    --warm-white: #faf8f4;
+    --gold:       #b8933f;
+    --gold-light: #d4ad5a;
+    --muted:      #7a7268;
+    --line:       rgba(184,147,63,0.25);
+    --chapter-bg: #131210;
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--warm-white);
+    color: var(--ink);
+    font-family: 'Outfit', sans-serif;
+    font-weight: 300;
+    overflow-x: hidden;
+  }
+
+  /* ─── NOISE OVERLAY ─── */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
+    pointer-events: none;
+    z-index: 1000;
+    opacity: 0.4;
+  }
+
+  /* ─── SCROLLBAR ─── */
+  ::-webkit-scrollbar { width: 3px; }
+  ::-webkit-scrollbar-track { background: var(--parchment); }
+  ::-webkit-scrollbar-thumb { background: var(--gold); }
+
+  /* ════════════════════════════════
+     NAV
+  ════════════════════════════════ */
+  nav {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    z-index: 900;
+    padding: 1.4rem 3rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    transition: background 0.4s, backdrop-filter 0.4s;
+  }
+  nav.scrolled {
+    background: rgba(250,248,244,0.88);
+    backdrop-filter: blur(14px);
+    border-bottom: 1px solid var(--line);
+  }
+  .nav-logo {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.1rem;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--ink);
+    text-decoration: none;
+  }
+  .nav-links { display: flex; gap: 2.4rem; list-style: none; }
+  .nav-links a {
+    font-size: 0.72rem;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--muted);
+    text-decoration: none;
+    transition: color 0.3s;
+  }
+  .nav-links a:hover { color: var(--gold); }
+
+  /* Back-link pill */
+  .nav-back {
+    font-size: 0.68rem;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--muted);
+    text-decoration: none;
+    border: 1px solid var(--line);
+    padding: 0.4rem 1rem;
+    border-radius: 2rem;
+    transition: color 0.3s, border-color 0.3s;
+  }
+  .nav-back:hover { color: var(--gold); border-color: var(--gold); }
+
+  /* ════════════════════════════════
+     A. PAGE HERO
+  ════════════════════════════════ */
+  #page-hero {
+    position: relative;
+    height: 80vh;
+    min-height: 540px;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    align-items: flex-start;
+    overflow: hidden;
+    background: var(--chapter-bg);
+
+    /* ── BACKGROUND IMAGE ──
+       Replace the gradient with your image:
+       background: linear-gradient(...), url('your-image.jpg') center/cover no-repeat;
+       The gradient acts as a darkening overlay over the image. */
+    background:
+      linear-gradient(
+        to top,
+        rgba(19,18,16,0.92) 0%,
+        rgba(19,18,16,0.55) 50%,
+        rgba(19,18,16,0.3)  100%
+      ),
+      /* INSERT YOUR HERO IMAGE BELOW — replace the color with url('path/to/image.jpg') */
+      linear-gradient(135deg, #1a1814 0%, #232018 100%);
+    background-size: cover;
+    background-position: center;
+  }
+
+  .hero-grain {
+    position: absolute;
+    inset: 0;
+    background-image: repeating-linear-gradient(
+      0deg,
+      transparent,
+      transparent 3px,
+      rgba(184,147,63,0.015) 3px,
+      rgba(184,147,63,0.015) 4px
+    );
+    pointer-events: none;
+  }
+
+  .hero-content {
+    position: relative;
+    z-index: 2;
+    padding: 0 3rem 5rem;
+    max-width: 820px;
+    opacity: 0;
+    transform: translateY(28px);
+    animation: fadeUp 1.2s cubic-bezier(0.22,1,0.36,1) 0.3s forwards;
+  }
+
+  @keyframes fadeUp {
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  /* EDITABLE: page-type tag (e.g. "Chapter II", "Milestone", "Reflection") */
+  .hero-tag {
+    display: inline-block;
+    font-size: 0.62rem;
+    letter-spacing: 0.28em;
+    text-transform: uppercase;
+    color: var(--gold);
+    border: 1px solid rgba(184,147,63,0.35);
+    padding: 0.35rem 0.9rem;
+    border-radius: 2rem;
+    margin-bottom: 1.6rem;
+  }
+
+  /* EDITABLE: main page title */
+  .hero-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(2.8rem, 7vw, 5.5rem);
+    font-weight: 300;
+    line-height: 1.06;
+    color: #f0ebe0;
+    letter-spacing: -0.01em;
+    margin-bottom: 1.2rem;
+  }
+  .hero-title em { font-style: italic; color: var(--gold-light); }
+
+  /* EDITABLE: short subtitle under the title */
+  .hero-subtitle {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(1rem, 2vw, 1.2rem);
+    font-style: italic;
+    color: rgba(240,235,224,0.5);
+    font-weight: 300;
+    max-width: 520px;
+    line-height: 1.65;
+  }
+
+  /* Hero scroll indicator */
+  .hero-scroll {
+    display: flex;
+    align-items: center;
+    gap: 0.8rem;
+    margin-top: 2.8rem;
+    color: rgba(240,235,224,0.25);
+    font-size: 0.62rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+  }
+  .hero-scroll-line {
+    width: 40px; height: 1px;
+    background: linear-gradient(to right, var(--gold), transparent);
+  }
+
+  /* ════════════════════════════════
+     SHARED UTILITIES
+  ════════════════════════════════ */
+  .container      { max-width: 820px;  margin: 0 auto; padding: 0 2.5rem; }
+  .container-wide { max-width: 1100px; margin: 0 auto; padding: 0 2.5rem; }
+
+  .section-label {
+    display: block;
+    font-size: 0.62rem;
+    letter-spacing: 0.28em;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 1.2rem;
+  }
+
+  .gold-rule {
+    width: 40px; height: 1px;
+    background: var(--gold);
+    margin: 2.2rem 0;
+    opacity: 0.6;
+  }
+
+  /* Reveal on scroll */
+  .reveal {
+    opacity: 0;
+    transform: translateY(28px);
+    transition: opacity 0.85s cubic-bezier(0.22,1,0.36,1),
+                transform 0.85s cubic-bezier(0.22,1,0.36,1);
+  }
+  .reveal.visible { opacity: 1; transform: translateY(0); }
+  .reveal-delay-1 { transition-delay: 0.1s; }
+  .reveal-delay-2 { transition-delay: 0.22s; }
+  .reveal-delay-3 { transition-delay: 0.34s; }
+  .reveal-delay-4 { transition-delay: 0.46s; }
+
+  /* ════════════════════════════════
+     B. INTRO BLOCK
+  ════════════════════════════════ */
+  #intro {
+    padding: 8rem 0 6rem;
+    background: var(--warm-white);
+  }
+
+  /* EDITABLE: large italic pull-quote style opener */
+  .intro-opener {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(1.6rem, 3.5vw, 2.5rem);
+    font-weight: 300;
+    font-style: italic;
+    line-height: 1.45;
+    color: var(--ink);
+    margin-bottom: 2.5rem;
+    padding-left: 2rem;
+    border-left: 2px solid var(--gold);
+  }
+
+  /* EDITABLE: intro body paragraph(s) */
+  .intro-text {
+    font-size: 1.05rem;
+    line-height: 1.9;
+    color: #3d3a34;
+    margin-bottom: 1.4rem;
+  }
+  .intro-text:last-child { margin-bottom: 0; }
+
+  /* ════════════════════════════════
+     C. CONTENT BLOCKS (REPEATABLE)
+
+     Three flavours — mix & match as
+     many times as you need them:
+       .block-img-left   (image | text)
+       .block-img-right  (text | image)
+       .block-full       (full-width image + text overlay)
+  ════════════════════════════════ */
+
+  /* ── Shared block wrapper ── */
+  .content-block {
+    padding: 6rem 0;
+  }
+  .content-block:nth-child(even) {
+    background: var(--parchment);
+  }
+  .content-block:nth-child(odd) {
+    background: var(--warm-white);
+  }
+
+  /* ── Split layout (img-left / img-right) ── */
+  .block-split {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 5rem;
+    align-items: center;
+  }
+
+  /* Swap column order for img-right variant */
+  .block-img-right .block-image { order: 2; }
+  .block-img-right .block-text  { order: 1; }
+
+  /* Image placeholder — replace .block-img-placeholder with <img> */
+  .block-image { position: relative; }
+  .block-img-placeholder {
+    width: 100%;
+    aspect-ratio: 4/3;
+    background: var(--chapter-bg);
+    border-radius: 2px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 0.8rem;
+    overflow: hidden;
+  }
+  .block-img-placeholder::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background-image:
+      linear-gradient(rgba(184,147,63,0.06) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(184,147,63,0.06) 1px, transparent 1px);
+    background-size: 40px 40px;
+  }
+  .img-placeholder-icon {
+    font-size: 1.3rem;
+    color: rgba(184,147,63,0.4);
+    position: relative;
+    z-index: 1;
+  }
+  .img-placeholder-text {
+    font-size: 0.62rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: rgba(184,147,63,0.35);
+    text-align: center;
+    line-height: 1.9;
+    position: relative;
+    z-index: 1;
+  }
+
+  /* To use a real image, replace the placeholder div with:
+     <img src="your-image.jpg" alt="Description" class="block-img-real"> */
+  .block-img-real {
+    width: 100%;
+    height: auto;
+    display: block;
+    object-fit: cover;
+    aspect-ratio: 4/3;
+    border-radius: 2px;
+  }
+
+  /* Text side */
+  .block-text { display: flex; flex-direction: column; }
+
+  .block-heading {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(1.8rem, 3.5vw, 2.6rem);
+    font-weight: 300;
+    line-height: 1.2;
+    color: var(--ink);
+    margin-bottom: 1.5rem;
+  }
+  .block-heading em { font-style: italic; color: var(--gold); }
+
+  .block-text p {
+    font-size: 1.02rem;
+    line-height: 1.88;
+    color: #3d3a34;
+    margin-bottom: 1.2rem;
+  }
+  .block-text p:last-child { margin-bottom: 0; }
+
+  /* ── Full-width block (type 3) ── */
+  .block-full {
+    position: relative;
+    min-height: 520px;
+    display: flex;
+    align-items: center;
+    overflow: hidden;
+
+    /* BACKGROUND IMAGE:
+       Replace the fallback gradient with:
+       background: linear-gradient(to right, rgba(19,18,16,0.88) 40%, rgba(19,18,16,0.4) 100%),
+                   url('your-image.jpg') center/cover no-repeat; */
+    background:
+      linear-gradient(
+        to right,
+        rgba(19,18,16,0.92) 40%,
+        rgba(19,18,16,0.5)  100%
+      ),
+      linear-gradient(135deg, #1a1814 0%, #232018 100%);
+    background-size: cover;
+    background-position: center;
+  }
+
+  .block-full-grid {
+    position: absolute;
+    inset: 0;
+    background-image:
+      linear-gradient(rgba(184,147,63,0.05) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(184,147,63,0.05) 1px, transparent 1px);
+    background-size: 60px 60px;
+  }
+
+  .block-full-content {
+    position: relative;
+    z-index: 2;
+    max-width: 580px;
+    padding: 5rem 3rem;
+  }
+
+  .block-full-heading {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(2rem, 4vw, 3rem);
+    font-weight: 300;
+    line-height: 1.15;
+    color: #f0ebe0;
+    margin-bottom: 1.4rem;
+  }
+  .block-full-heading em { font-style: italic; color: var(--gold-light); }
+
+  .block-full-text {
+    font-size: 1.02rem;
+    line-height: 1.88;
+    color: rgba(240,235,224,0.55);
+    font-family: 'Cormorant Garamond', serif;
+    font-style: italic;
+  }
+
+  /* ════════════════════════════════
+     D. VISUAL BREAK
+  ════════════════════════════════ */
+  .visual-break {
+    width: 100%;
+    height: clamp(240px, 40vw, 480px);
+    position: relative;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    /* BACKGROUND IMAGE:
+       background: url('your-image.jpg') center/cover no-repeat; */
+    background: var(--chapter-bg);
+  }
+
+  .visual-break-grid {
+    position: absolute;
+    inset: 0;
+    background-image:
+      linear-gradient(rgba(184,147,63,0.06) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(184,147,63,0.06) 1px, transparent 1px);
+    background-size: 60px 60px;
+  }
+  .visual-break-glow {
+    position: absolute;
+    width: 45%; height: 45%;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(184,147,63,0.14) 0%, transparent 70%);
+    top: 27%; left: 27%;
+  }
+  .visual-break-placeholder {
+    position: relative;
+    z-index: 2;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.8rem;
+    text-align: center;
+  }
+  .visual-break-icon {
+    width: 48px; height: 48px;
+    border: 1px solid rgba(184,147,63,0.3);
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 1.1rem;
+    color: rgba(184,147,63,0.45);
+  }
+  .visual-break-label {
+    font-size: 0.62rem;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: rgba(184,147,63,0.35);
+    line-height: 1.8;
+  }
+
+  /* ════════════════════════════════
+     E. HIGHLIGHT / QUOTE SECTION
+  ════════════════════════════════ */
+  #highlight {
+    padding: 8rem 0;
+    background: var(--chapter-bg);
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+  }
+  #highlight::before {
+    content: '';
+    position: absolute;
+    width: 600px; height: 600px;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(184,147,63,0.09) 0%, transparent 65%);
+    top: 50%; left: 50%;
+    transform: translate(-50%,-50%);
+    pointer-events: none;
+  }
+
+  /* EDITABLE: the big centred quote */
+  .highlight-quote {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(1.8rem, 4vw, 3rem);
+    font-weight: 300;
+    font-style: italic;
+    line-height: 1.4;
+    color: #f0ebe0;
+    max-width: 700px;
+    margin: 0 auto 2rem;
+    position: relative;
+    z-index: 1;
+  }
+  .highlight-quote em { color: var(--gold-light); font-style: normal; }
+
+  /* EDITABLE: attribution or short reflection under the quote */
+  .highlight-attr {
+    font-size: 0.72rem;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: rgba(184,147,63,0.5);
+    position: relative;
+    z-index: 1;
+  }
+
+  .highlight-rule {
+    width: 50px; height: 1px;
+    background: var(--gold);
+    opacity: 0.4;
+    margin: 2.5rem auto;
+  }
+
+  /* ════════════════════════════════
+     F. MINI TIMELINE (OPTIONAL)
+  ════════════════════════════════ */
+  #mini-timeline {
+    padding: 8rem 0;
+    background: var(--parchment);
+  }
+
+  .mini-timeline-heading {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(1.8rem, 3.5vw, 2.6rem);
+    font-weight: 300;
+    color: var(--ink);
+    margin-bottom: 4rem;
+  }
+
+  .mini-track {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+    border-left: 1px solid rgba(184,147,63,0.3);
+    padding-left: 2.5rem;
+    position: relative;
+  }
+
+  .mini-item {
+    position: relative;
+    padding-bottom: 3rem;
+  }
+  .mini-item::before {
+    content: '';
+    position: absolute;
+    left: -2.9rem;
+    top: 0.3rem;
+    width: 8px; height: 8px;
+    border-radius: 50%;
+    background: var(--gold);
+    box-shadow: 0 0 12px rgba(184,147,63,0.5);
+  }
+  .mini-item:last-child { padding-bottom: 0; }
+
+  /* EDITABLE: each milestone marker */
+  .mini-marker {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 0.82rem;
+    color: var(--gold);
+    letter-spacing: 0.1em;
+    margin-bottom: 0.4rem;
+  }
+  .mini-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.3rem;
+    font-weight: 400;
+    color: var(--ink);
+    margin-bottom: 0.5rem;
+  }
+  .mini-desc {
+    font-size: 0.92rem;
+    line-height: 1.8;
+    color: var(--muted);
+    max-width: 560px;
+  }
+
+  /* ════════════════════════════════
+     G. CLOSING SECTION
+  ════════════════════════════════ */
+  #closing {
+    padding: 9rem 0;
+    background: var(--warm-white);
+  }
+
+  .closing-inner {
+    max-width: 680px;
+  }
+
+  /* EDITABLE: closing paragraph(s) */
+  .closing-text {
+    font-size: 1.05rem;
+    line-height: 1.9;
+    color: #3d3a34;
+    margin-bottom: 1.4rem;
+  }
+
+  /* EDITABLE: optional forward-looking statement */
+  .closing-forward {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(1.4rem, 3vw, 2rem);
+    font-weight: 300;
+    font-style: italic;
+    color: var(--ink);
+    line-height: 1.45;
+    margin-top: 3rem;
+    padding-top: 3rem;
+    border-top: 1px solid var(--line);
+  }
+  .closing-forward em { color: var(--gold); font-style: normal; }
+
+  /* Optional next-page navigation link */
+  .closing-nav {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.8rem;
+    margin-top: 3rem;
+    font-size: 0.72rem;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--muted);
+    text-decoration: none;
+    transition: color 0.3s;
+  }
+  .closing-nav::after {
+    content: '→';
+    font-size: 1rem;
+    transition: transform 0.3s;
+  }
+  .closing-nav:hover { color: var(--gold); }
+  .closing-nav:hover::after { transform: translateX(4px); }
+
+  /* ════════════════════════════════
+     FOOTER
+  ════════════════════════════════ */
+  footer {
+    background: var(--chapter-bg);
+    border-top: 1px solid rgba(184,147,63,0.12);
+    padding: 2.5rem 3rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  .footer-logo {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 0.9rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: rgba(240,235,224,0.35);
+  }
+  .footer-note {
+    font-size: 0.68rem;
+    color: rgba(240,235,224,0.2);
+    letter-spacing: 0.1em;
+  }
+
+  /* ════════════════════════════════
+     RESPONSIVE
+  ════════════════════════════════ */
+  @media (max-width: 768px) {
+    nav { padding: 1.2rem 1.5rem; }
+    .nav-links { display: none; }
+    .hero-content { padding: 0 1.5rem 4rem; }
+    .block-split { grid-template-columns: 1fr; gap: 2.5rem; }
+    .block-img-right .block-image { order: 0; }
+    .block-img-right .block-text  { order: 0; }
+    .block-full-content { padding: 3.5rem 1.5rem; }
+    footer { flex-direction: column; gap: 1rem; text-align: center; }
+    .container, .container-wide { padding: 0 1.4rem; }
+    .content-block { padding: 4rem 0; }
+    #intro, #highlight, #mini-timeline, #closing { padding: 5rem 0; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ════════════════════════════════════════
+     NAV
+     • Update .nav-logo text
+     • Update <li> links to match your site structure
+     • .nav-back links back to your main landing page
+════════════════════════════════════════ -->
+<nav id="nav">
+  <a href="index.html" class="nav-logo">[Institute Name]</a>
+  <ul class="nav-links">
+    <li><a href="index.html#spark">The Spark</a></li>
+    <li><a href="index.html#timeline">Timeline</a></li>
+    <li><a href="index.html#chapters">Chapters</a></li>
+    <li><a href="index.html#story-blog">The Story</a></li>
+    <li><a href="index.html#conclusion">Today</a></li>
+  </ul>
+  <a href="index.html" class="nav-back">← Back to Home</a>
+</nav>
+
+
+<!-- ════════════════════════════════════════
+     A. PAGE HERO
+     ─────────────────────────────────────
+     EDITABLE:
+       1. Replace [Chapter Tag] with e.g. "Chapter II", "Milestone", "Reflection"
+       2. Replace hero title text (use <em> for the italic gold word)
+       3. Replace hero subtitle text
+       4. Add your background image in the CSS #page-hero rule
+     ─────────────────────────────────────
+     DESIGN NOTES:
+       • Full-height cinematic header, text bottom-left
+       • Background image with gradient overlay for text legibility
+       • Can repeat: yes, one per page
+════════════════════════════════════════ -->
+<section id="page-hero">
+  <div class="hero-grain"></div>
+
+  <div class="hero-content">
+    <!-- Chapter / type label -->
+    <span class="hero-tag">[Chapter Tag]</span>
+
+    <!-- Main title — use <em> for the italic/gold word -->
+    <h1 class="hero-title">
+      Section Title<br>Goes <em>Here</em>
+    </h1>
+
+    <!-- Short subtitle — one or two lines max -->
+    <p class="hero-subtitle">
+      A short, evocative subtitle that sets the tone for this section.
+      Keep it poetic and brief — no more than two lines.
+    </p>
+
+    <div class="hero-scroll">
+      <div class="hero-scroll-line"></div>
+      Continue reading
+    </div>
+  </div>
+</section>
+
+
+<!-- ════════════════════════════════════════
+     B. INTRO BLOCK
+     ─────────────────────────────────────
+     EDITABLE:
+       1. Replace the intro-opener quote
+       2. Replace intro-text paragraph(s)
+     ─────────────────────────────────────
+     DESIGN NOTES:
+       • Centred prose section, golden left-border quote
+       • Sets the narrative before content blocks begin
+       • Can repeat: no — use once per page, near the top
+════════════════════════════════════════ -->
+<section id="intro">
+  <div class="container">
+
+    <span class="section-label reveal">Introduction</span>
+
+    <!-- Pull-quote / chapter opener — italic, impactful, 1–2 sentences -->
+    <blockquote class="intro-opener reveal reveal-delay-1">
+      "Replace this with a single, powerful line that frames this chapter.
+      It should feel like the first sentence of a memoir."
+    </blockquote>
+
+    <!-- Intro paragraph 1 -->
+    <p class="intro-text reveal reveal-delay-2">
+      This is where you introduce the section in 2–4 sentences. Keep it
+      narrative and personal — avoid bullet points and formal language here.
+      Write as if you are telling a story, not presenting a report.
+    </p>
+
+    <!-- Intro paragraph 2 (optional — delete if not needed) -->
+    <p class="intro-text reveal reveal-delay-3">
+      This second paragraph can expand slightly on what the reader will encounter
+      in this section, or deepen the emotional context you opened with. End with
+      something that makes the reader want to keep scrolling.
+    </p>
+
+  </div>
+</section>
+
+
+<!-- ════════════════════════════════════════
+     C. CONTENT BLOCKS (REPEATABLE)
+     ─────────────────────────────────────
+     THREE BLOCK TYPES — copy & paste as many as you need.
+     Alternate types to create visual rhythm.
+     Recommended sequence: img-left → img-right → full-width → img-left → ...
+════════════════════════════════════════ -->
+
+<!-- ── TYPE 1: Image Left / Text Right ──
+     EDITABLE: heading, paragraphs, image
+     DESIGN NOTES:
+       • 50/50 split — image on left, prose on right
+       • Good for: describing a specific moment, person, or place
+       • Can repeat: yes, as many times as needed
+       • Background alternates automatically (odd=warm-white, even=parchment)
+-->
+<section class="content-block">
+  <div class="container-wide">
+    <div class="block-split block-img-left">
+
+      <!-- IMAGE SIDE -->
+      <div class="block-image reveal">
+        <!-- Replace this placeholder div with your real image:
+             <img src="your-image.jpg" alt="Describe the image" class="block-img-real"> -->
+        <div class="block-img-placeholder">
+          <div class="img-placeholder-icon">⬡</div>
+          <p class="img-placeholder-text">
+            Insert image here<br>
+            Replace with &lt;img src="..."&gt;
+          </p>
+        </div>
+      </div>
+
+      <!-- TEXT SIDE -->
+      <div class="block-text reveal reveal-delay-2">
+        <span class="section-label">[Section Tag]</span>
+
+        <!-- Section heading — use <em> for the stylised word -->
+        <h2 class="block-heading">
+          Section Heading<br>Goes <em>Here</em>
+        </h2>
+
+        <div class="gold-rule"></div>
+
+        <!-- Body paragraph 1 -->
+        <p>
+          This is your main paragraph for this block. Write 3–5 sentences that
+          narrate the moment, person, or idea this image represents. Stay personal
+          and specific — avoid generic descriptions. Detail is what makes stories memorable.
+        </p>
+
+        <!-- Body paragraph 2 (optional) -->
+        <p>
+          You can add a second paragraph here if needed. Keep the total text
+          concise — this block should breathe alongside the image, not overwhelm it.
+        </p>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+
+<!-- ── TYPE 2: Text Left / Image Right ──
+     EDITABLE: heading, paragraphs, image
+     DESIGN NOTES:
+       • Mirror of Type 1 — text left, image right
+       • Creates visual rhythm when alternated with Type 1
+       • Can repeat: yes
+-->
+<section class="content-block">
+  <div class="container-wide">
+    <div class="block-split block-img-right">
+
+      <!-- TEXT SIDE (renders left because of flex order) -->
+      <div class="block-text reveal">
+        <span class="section-label">[Section Tag]</span>
+
+        <h2 class="block-heading">
+          Another Section<br><em>Heading Here</em>
+        </h2>
+
+        <div class="gold-rule"></div>
+
+        <p>
+          Another content paragraph. Each Type 1 / Type 2 block pair tells one
+          part of the story. Think of them as facing pages in a book — image and
+          text always in conversation with each other.
+        </p>
+
+        <p>
+          Optional second paragraph. Delete if not needed.
+          Less text + more whitespace = more impact.
+        </p>
+      </div>
+
+      <!-- IMAGE SIDE (renders right) -->
+      <div class="block-image reveal reveal-delay-2">
+        <!-- Replace with: <img src="your-image.jpg" alt="Description" class="block-img-real"> -->
+        <div class="block-img-placeholder">
+          <div class="img-placeholder-icon">⬡</div>
+          <p class="img-placeholder-text">
+            Insert image here<br>
+            Replace with &lt;img src="..."&gt;
+          </p>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+
+<!-- ── TYPE 3: Full-Width Image + Overlay Text ──
+     EDITABLE: heading, body text, background image (in CSS or inline style)
+     DESIGN NOTES:
+       • Dramatic full-bleed section — text floats over the image
+       • Add your image in the style attribute below (background-image: url(...))
+       • Use for: turning points, dramatic revelations, key moments
+       • Can repeat: yes, but use sparingly — 1–2 per page for maximum impact
+-->
+<section class="content-block block-full"
+  style="
+    /* ADD YOUR IMAGE HERE:
+       background-image:
+         linear-gradient(to right, rgba(19,18,16,0.92) 40%, rgba(19,18,16,0.5) 100%),
+         url('your-image.jpg');
+       background-size: cover;
+       background-position: center;
+    */
+  ">
+  <div class="block-full-grid"></div>
+
+  <div class="container-wide" style="position:relative;z-index:2;width:100%">
+    <div class="block-full-content reveal">
+
+      <span class="section-label" style="color:var(--gold)">[Section Tag]</span>
+
+      <!-- Full-width block heading -->
+      <h2 class="block-full-heading">
+        A Powerful Heading<br><em>That Stands Alone</em>
+      </h2>
+
+      <!-- Full-width block text — italic, shorter, atmospheric -->
+      <p class="block-full-text">
+        This is your full-width text block. It should be shorter and more
+        atmospheric than the split blocks — a moment of reflection, not a full
+        explanation. Think caption, not paragraph. Two to four sentences maximum.
+      </p>
+
+    </div>
+  </div>
+</section>
+
+
+<!-- ────────────────────────────────────────
+     REPEAT CONTENT BLOCKS AS NEEDED ABOVE.
+     Copy any of the three block types and
+     paste them in sequence to build out the
+     full page narrative.
+──────────────────────────────────────── -->
+
+
+<!-- ════════════════════════════════════════
+     D. VISUAL BREAK
+     ─────────────────────────────────────
+     EDITABLE:
+       • Replace background with your image (style attribute or CSS)
+       • Remove the placeholder div once the image is in place
+     ─────────────────────────────────────
+     DESIGN NOTES:
+       • Full-width breathing space between major sections
+       • No heavy text — only the image speaks here
+       • Can repeat: yes, 1–2 per page
+════════════════════════════════════════ -->
+<div class="visual-break"
+  style="
+    /* ADD YOUR IMAGE:
+       background: url('your-image.jpg') center/cover no-repeat;
+    */
+  ">
+  <div class="visual-break-grid"></div>
+  <div class="visual-break-glow"></div>
+  <!-- DELETE this placeholder block once you add a real image -->
+  <div class="visual-break-placeholder">
+    <div class="visual-break-icon">⬡</div>
+    <p class="visual-break-label">
+      Visual Break<br>
+      Replace with a full-width atmospheric image
+    </p>
+  </div>
+</div>
+
+
+<!-- ════════════════════════════════════════
+     E. HIGHLIGHT / QUOTE SECTION
+     ─────────────────────────────────────
+     EDITABLE:
+       1. Replace highlight-quote text
+       2. Replace highlight-attr attribution
+     ─────────────────────────────────────
+     DESIGN NOTES:
+       • Dark background, centred large quote — maximum emotional weight
+       • Use for: the single most important insight of this page
+       • Can repeat: no — use once per page
+════════════════════════════════════════ -->
+<section id="highlight">
+  <div class="container" style="position:relative;z-index:2">
+
+    <div class="highlight-rule reveal"></div>
+
+    <!-- The big centred quote — short and impactful (1–3 lines) -->
+    <!-- Use <em> to highlight a key word or phrase in gold -->
+    <blockquote class="highlight-quote reveal reveal-delay-1">
+      "Replace this with the most powerful line of this chapter —
+      the sentence you want the reader to remember
+      long after they've <em>closed the page.</em>"
+    </blockquote>
+
+    <!-- Attribution or short note below the quote -->
+    <p class="highlight-attr reveal reveal-delay-2">
+      — Attribution or reflection (optional)
+    </p>
+
+    <div class="highlight-rule reveal reveal-delay-3"></div>
+
+  </div>
+</section>
+
+
+<!-- ════════════════════════════════════════
+     F. MINI TIMELINE (OPTIONAL SECTION)
+     ─────────────────────────────────────
+     EDITABLE:
+       • Duplicate .mini-item blocks to add milestones
+       • Delete entire section if not needed for this page
+     ─────────────────────────────────────
+     DESIGN NOTES:
+       • Compact milestone list — for pages that need a brief chronology
+       • Not as detailed as the main timeline on the landing page
+       • Can repeat: no — use once if at all
+       • Recommended: 3–5 milestones max
+════════════════════════════════════════ -->
+<section id="mini-timeline">
+  <div class="container">
+
+    <span class="section-label reveal">Key Moments</span>
+    <h2 class="mini-timeline-heading reveal reveal-delay-1">
+      The Shape of This Chapter
+    </h2>
+
+    <div class="mini-track">
+
+      <!-- MILESTONE 1 — EDITABLE -->
+      <div class="mini-item reveal">
+        <div class="mini-marker">[Year or Phase]</div>
+        <h3 class="mini-title">Milestone Title</h3>
+        <p class="mini-desc">
+          A brief description of this milestone — 1–2 sentences.
+          What happened, why it mattered, what changed because of it.
+        </p>
+      </div>
+
+      <!-- MILESTONE 2 — EDITABLE -->
+      <div class="mini-item reveal reveal-delay-1">
+        <div class="mini-marker">[Year or Phase]</div>
+        <h3 class="mini-title">Milestone Title</h3>
+        <p class="mini-desc">
+          A brief description of this milestone — 1–2 sentences.
+          What happened, why it mattered, what changed because of it.
+        </p>
+      </div>
+
+      <!-- MILESTONE 3 — EDITABLE -->
+      <div class="mini-item reveal reveal-delay-2">
+        <div class="mini-marker">[Year or Phase]</div>
+        <h3 class="mini-title">Milestone Title</h3>
+        <p class="mini-desc">
+          A brief description of this milestone — 1–2 sentences.
+          What happened, why it mattered, what changed because of it.
+        </p>
+      </div>
+
+      <!-- ADD MORE: copy a .mini-item block and paste it here -->
+
+    </div>
+  </div>
+</section>
+
+
+<!-- ════════════════════════════════════════
+     G. CLOSING SECTION
+     ─────────────────────────────────────
+     EDITABLE:
+       1. Replace closing-text paragraphs
+       2. Replace closing-forward sentence
+       3. Update .closing-nav link to next page
+     ─────────────────────────────────────
+     DESIGN NOTES:
+       • Quiet, restrained ending — no dark backgrounds here
+       • Forward-looking statement hints at what comes next
+       • .closing-nav links reader to the next chapter/page
+       • Can repeat: no — one per page, always the last section before footer
+════════════════════════════════════════ -->
+<section id="closing">
+  <div class="container">
+    <div class="closing-inner">
+
+      <span class="section-label reveal">In Closing</span>
+
+      <!-- Closing paragraph 1 -->
+      <p class="closing-text reveal reveal-delay-1">
+        This is where you bring the page to a close — reflect on what
+        has been shared in this chapter, and give the reader a moment to
+        breathe before moving forward. Keep it warm, personal, and brief.
+        Two paragraphs is usually enough.
+      </p>
+
+      <!-- Closing paragraph 2 (optional) -->
+      <p class="closing-text reveal reveal-delay-2">
+        A second closing thought. This can acknowledge what was difficult,
+        or what was discovered, or simply thank the reader for their attention.
+        End on something quiet and human.
+      </p>
+
+      <!-- Forward-looking statement — transitions to the next page -->
+      <!-- Use <em> to emphasise the connective word (gold, non-italic) -->
+      <p class="closing-forward reveal reveal-delay-3">
+        "The next chapter begins where this one ends —
+        not with a conclusion, but with a <em>question.</em>"
+      </p>
+
+      <!-- Optional: link to next page / chapter -->
+      <a href="next-chapter.html" class="closing-nav reveal reveal-delay-4">
+        Continue to the next chapter
+      </a>
+
+    </div>
+  </div>
+</section>
+
+
+<!-- ════════════════════════════════════════
+     FOOTER
+     EDITABLE: institute name, website/contact
+════════════════════════════════════════ -->
+<footer>
+  <span class="footer-logo">[Institute Name]</span>
+  <span class="footer-note">
+    [Website / Contact] &nbsp;·&nbsp; Est. [Year]
+  </span>
+</footer>
+
+
+<!-- ════════════════════════════════════════
+     JS — Scroll Nav + Reveal Animations
+     (identical to landing page — do not modify)
+════════════════════════════════════════ -->
+<script>
+  // Sticky nav effect
+  const nav = document.getElementById('nav');
+  window.addEventListener('scroll', () => {
+    nav.classList.toggle('scrolled', window.scrollY > 60);
+  });
+
+  // Scroll-triggered reveal
+  const revealEls = document.querySelectorAll('.reveal');
+  const io = new IntersectionObserver((entries) => {
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        e.target.classList.add('visible');
+        io.unobserve(e.target);
+      }
+    });
+  }, { threshold: 0.12, rootMargin: '0px 0px -40px 0px' });
+  revealEls.forEach(el => io.observe(el));
+</script>
+
+</body>
+</html>
