@@ -7,6 +7,9 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Outfit:wght@200;300;400;500&display=swap" rel="stylesheet">
 
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+
 <style>
   :root {
     --ink:        #0e0d0b;
@@ -555,7 +558,7 @@
   }
   .blog-header {
     text-align: center;
-    margin-bottom: 6rem;
+    margin-bottom: 2rem;
   }
   .blog-heading {
     font-family: 'Cormorant Garamond', serif;
@@ -620,6 +623,58 @@
     font-style: italic;
     max-width: none;
   }
+
+  /*Google Earth */
+  /* 1. The Container that defines the scroll duration */
+.timelapse-outer {
+    width: 100%;
+    background: #131210;
+    padding: 2rem 0;
+    display: flex;
+    justify-content: center;
+}
+
+/* 2. The Box that stays glued to the screen while inside .timelapse-outer */
+.timelapse-sticky-box {
+    position: -webkit-sticky; /* For Safari */
+    position: sticky;
+    top: 0;
+    height: 100vh; /* Takes up the full screen height while scrolling */
+    width: 100%;
+    overflow: hidden; /* Keeps things tidy */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(1.4rem, 2.8vw, 2rem);
+    font-weight: 300;
+    color: #b8933f;
+}
+
+#timelapse-canvas {
+    /* Fix the display size so it doesn't jump */
+    width: 90vw; 
+    max-width: 1800px; 
+    height: auto;
+    aspect-ratio: 16 / 9; /* Matches your image shape */
+    background:#131210;
+    cursor: ns-resize;
+    display: block;
+}
+
+#timestamp {
+    position: absolute;
+    top: 5%;
+    right: 5%;
+    color: white;
+    font-size: 4rem;
+    z-index: 2;
+}
+
+.gold-accent {
+    color: #b8933f;
+    font-style: italic; /* Adds that editorial flair */
+}
 
   /* ─── CONCLUSION ─── */
   #conclusion {
@@ -763,6 +818,8 @@
   }
 }
 </style>
+
+
 </head>
 <body>
 
@@ -1315,24 +1372,25 @@
 </section>
 
 
-<!-- ════════════════════════════════════════
-     VISUAL BREAK 4 — Before Conclusion
-     → Suggested Image: A horizon, an open window,
-       or a single person looking forward.
-       Mood: reflection, possibility, forward motion.
-════════════════════════════════════════ -->
-<div class="visual-break visual-break-dark" style="height:320px">
-  <div class="visual-grid"></div>
-  <div class="visual-glow" style="width:50%;height:80%;top:10%;left:25%"></div>
-  <div class="visual-placeholder">
-    <div class="visual-placeholder-icon">⬡</div>
-    <p class="visual-placeholder-text">
-      Visual Break 04<br>
-      Replace with: A horizon or window image —<br>
-      mood of reflection, possibility, and forward motion
-    </p>
-  </div>
+<!-- =====================================
+    Google earth timelapse
+========================================== -->
+
+<section style="background: #131210;">
+  <div class="blog-header reveal">
+    <h2 class="blog-heading">
+  From What Was, to <span class="blog-heading">What Became</span>
+</h2>
+    <p class="blog-sub">A satellite retrospective of the IIST landscape.</p>
 </div>
+  <div class="timelapse-outer">
+    <div class="timelapse-sticky-box">
+        <div id="timestamp">2010</div>
+        <canvas id="timelapse-canvas"></canvas>
+    </div>
+</div>
+</section>
+
 
 
 <!-- ════════════════════════════════════════
@@ -1416,6 +1474,67 @@
 
   revealEls.forEach(el => io.observe(el));
 </script>
+<!-- Google earth image scrolling-->
+<script>
+const canvas = document.getElementById("timelapse-canvas");
+const ctx = canvas.getContext("2d", { alpha: false }); // Performance boost: disable transparency
+const timestamp = document.getElementById("timestamp");
 
+// 1. DATA
+const frameCount = 15;
+const years = [2010, 2011, 2012, 2013, 2014, 2015, 2016, 2017, 2018, 2019, 2020, 2021, 2022, 2024, 2025];
+const images = [];
+let currentFrame = 0;
+let isMouseOver = false;
+
+// 2. PRELOAD (Run this once)
+for (let i = 1; i <= frameCount; i++) {
+    const img = new Image();
+    img.src = `./images/iist_${i.toString().padStart(3, '0')}.jpg`;
+    images.push(img);
+}
+
+// 3. RENDER (Fast and targeted)
+function drawFrame(index) {
+    const img = images[index];
+    if (!img || !img.complete) return;
+
+    // Only set canvas internal size once to prevent lag
+    if (canvas.width !== img.width) {
+        canvas.width = img.width;
+        canvas.height = img.height;
+    }
+
+    ctx.drawImage(img, 0, 0);
+    timestamp.innerText = years[index] || "";
+}
+
+// 4. SMART LISTENERS
+// Only track the wheel if the mouse is ACTUALLY over the image
+canvas.addEventListener('mouseenter', () => { isMouseOver = true; });
+canvas.addEventListener('mouseleave', () => { isMouseOver = false; });
+
+window.addEventListener('wheel', (e) => {
+    if (!isMouseOver) return; // Ignore if mouse is elsewhere on the page
+
+    const isScrollingDown = e.deltaY > 0;
+    const atStart = currentFrame === 0;
+    const atEnd = currentFrame === frameCount - 1;
+
+    // Only "Capture" the scroll if we have frames to show in that direction
+    if ((isScrollingDown && !atEnd) || (!isScrollingDown && !atStart)) {
+        e.preventDefault(); // Stop page from moving
+        
+        if (isScrollingDown) currentFrame++;
+        else currentFrame--;
+
+        // Use requestAnimationFrame for buttery smooth visuals
+        requestAnimationFrame(() => drawFrame(currentFrame));
+    }
+}, { passive: false });
+
+// Initial render
+images[0].onload = () => drawFrame(0);
+</script>
 </body>
 </html>
