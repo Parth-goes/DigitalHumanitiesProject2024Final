@@ -742,6 +742,26 @@
   border-radius: 12px;  /* optional, modern look */
   opacity: 0.4;
 }
+.visual-images {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+
+  width: 80%;
+  max-width: 900px;
+}
+
+.visual-images .visual-image1 {
+  width: 100%;
+  height: 250px;
+  object-fit: cover;
+  border-radius: 8px;
+}
+  @media (max-width: 768px) {
+  .visual-images {
+    grid-template-columns: 1fr;
+  }
+}
 </style>
 </head>
 <body>
@@ -895,15 +915,16 @@
 ════════════════════════════════════════ -->
 <div class="visual-break visual-break-parchment">
   <div class="visual-placeholder">
+
     <div class="visual-placeholder-icon" style="border-color:rgba(14,13,11,0.2);color:#7a7268">⬡</div>
-    <p class="visual-placeholder-text" style="color:rgba(14,13,11,0.25)">
-      Visual Break 02<br>
-      Replace with: Handwritten notes, old documents,<br>
-      or hands gathered around a planning table
-    </p>
+
+    <div class="visual-images">
+      <img src="CommonMyna.jpeg" alt="Visual 1" class="visual-image1">
+      <img src="EasternCattle.jpeg" alt="Visual 2" class="visual-image1">
+    </div>
+
   </div>
 </div>
-
 
 <!-- ════════════════════════════════════════
      D. TIMELINE
